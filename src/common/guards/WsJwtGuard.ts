@@ -17,7 +17,8 @@ export class WsJwtGuard implements CanActivate {
     let client: Socket
     try {
       client = context.switchToWs().getClient<Socket>()
-      const authToken: string = client.handshake?.query?.token
+      const token = client.handshake?.query?.token
+      const authToken: string = Array.isArray(token) ? token[0] : token
       const user = this.authService.verifyUser(authToken)
       return Boolean(user)
     } catch (err) {
